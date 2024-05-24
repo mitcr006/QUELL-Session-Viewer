@@ -35,9 +35,7 @@ public class SessionManager : MonoBehaviour
     void Start()
     {
         Debug.Log(Application.persistentDataPath);
-        DirectoryInfo parent = Directory.GetParent(Application.persistentDataPath.ToString());
-        DirectoryInfo parent2 = Directory.GetParent(parent.FullName);
-        saveDataFilePath = parent2.FullName + "/com.Quell.Shardfall/Users/";
+        saveDataFilePath = GetDirPath();
 
         string[] paths = Application.persistentDataPath.Split("/");
         foreach (string part in paths)
@@ -60,6 +58,17 @@ public class SessionManager : MonoBehaviour
             }
 
         }
+    }
+
+    public string GetDirPath() {
+        if (Application.platform == RuntimePlatform.OSXEditor){
+            DirectoryInfo parentPath = Directory.GetParent(Application.persistentDataPath.ToString());
+            DirectoryInfo parent2 = Directory.GetParent(parentPath.FullName);
+            return parent2.FullName + "/com.Quell.Shardfall/Users/";
+        }
+        DirectoryInfo parent = Directory.GetParent(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData));
+        return parent.FullName+"/LocalLow/Quell/Users";
+       
     }
 
     public void TryParseInput()
